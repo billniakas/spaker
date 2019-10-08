@@ -1,18 +1,24 @@
 #!/bin/bash
 dpkg -l | grep linux-image | awk '{print$2}' | grep -vwE linux-image-"generic|$(uname -r)" > temp.tmp
 
+if [ $(stat -c%s temp.tmp) -eq 0 ]
+	then
+	echo "Δε βρέθηκαν διαθέσιμοι πυρήνες"
+	rm temp.tmp
+	exit 1
+fi
+
 echo "Καλώς ήρθατε στο SpaKeR (Spare Kernel Remover)"
 echo "----------------------------------------------"
 while true 
 do
 num=0 
-	while IFS= read -r line
-	do
-		num=$(( $num + 1 ))
-		echo "["$num"]" $line
-	done < "temp.tmp"
+while IFS= read -r line
+do
+num=$(( $num + 1 ))
+echo "["$num"]" $line
+done < "temp.tmp"
 echo "----------------------------------------------"
-
 
 read -rp "Διαλέξτε Πυρήνα για αφαίρεση (Q/q για έξοδο): " input
 
